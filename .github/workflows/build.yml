@@ -1,0 +1,81 @@
+name: image
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  BUILDROOT_VERSION: '2020.05-rc2'
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        board:
+          - 'raspberrypi3'
+      fail-fast: false
+
+    env:
+      BUILD_NAME: 'smartpi-exporter-${{ matrix.board }}-${{ github.sha }}'
+      CONFIG_NAME: 'smartpi_exporter_${{ matrix.board }}_defconfig'
+    steps:
+      - name: Free space on runner
+        run: |
+          sudo apt-get -y remove 'clang*' 'libclang*' 'llvm-*' 'lld-*' 'lldb-*' 'dotnet-*' 'msbuild*' 'mono*' 'libmono*' ca-certificates-mono esl-erlang 'gfortran-*' 'libgfortran*' google-cloud-sdk 'ghc-*' 'cabal-*' 'zulu-*' 'mongodb-org*'
+          sudo apt-get -y autoremove
+          sudo apt-get clean
+          sudo rm -rf /usr/share/swift /usr/share/dotnet
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install bc
+
+      - name: Checkout Buildroot
+        uses: actions/checkout@v2
+        with:
+          repository: 'buildroot/buildroot'
+          ref: '${{ env.BUILDROOT_VERSION }}'
+          path: 'buildroot'
+
+      - name: Checkout external
+        uses: actions/checkout@v2
+        with:
+          path: 'external'
+      - name: Configure Image
+        run: |
+          make -s BR2_EXTERNAL=$GITHUB_WORKSPACE/external $CONFIG_NAME
+        working-directory: 'buildroot'
+
+      - name: Download source
+        run: |
+          make -s source
+        working-directory: 'buildroot'
+
+      - name: Build toolchain
+        run: |
+          make -s toolchain
+        working-directory: 'buildroot'
+
+      - name: Build image
+        run: |
+          make -s all
+        working-directory: 'buildroot'
+
+      - name: Move artifacts
+        run: |
+          mkdir -p "artifacts/$BUILD_NAME"
+          mv buildroot/output/images/sdcard.img buildroot/output/images/*Image artifacts/$BUILD_NAME/
+
+      - name: Clean build directory
+        run: |
+          make -s clean
+        working-directory: 'buildroot'
+  
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: '${{ env.BUILD_NAME }}'
+          path: 'artifacts/${{ env.BUILD_NAME }}'

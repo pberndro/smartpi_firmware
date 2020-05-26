@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_SMARTPI_FIRMWARE_PATH/package/node_exporter/Config.in"
+source "$BR2_EXTERNAL_SMARTPI_FIRMWARE_PATH/package/smartpi_exporter/Config.in"

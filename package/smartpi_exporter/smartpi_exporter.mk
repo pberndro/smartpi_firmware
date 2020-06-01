@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SMARTPI_EXPORTER_VERSION = 3cbbab1aacb7cf94497d7e81c6a312f3d56cab9c
+SMARTPI_EXPORTER_VERSION = 82828e430af3faeda3fa440f02b9e71b15ada86d
 SMARTPI_EXPORTER_SITE = $(call github,pberndro,smartpi_exporter,$(SMARTPI_EXPORTER_VERSION))
 SMARTPI_EXPORTER_LICENSE = GPL-3.0
 SMARTPI_EXPORTER_LICENSE_FILES = LICENSE

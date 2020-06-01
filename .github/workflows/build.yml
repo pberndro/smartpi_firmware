@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  BUILDROOT_VERSION: '2020.05-rc2'
+  BUILDROOT_VERSION: '2020.05-rc3'
 
 jobs:
   build:
@@ -15,11 +15,12 @@ jobs:
       matrix:
         board:
           - 'raspberrypi3'
+          - 'raspberrypi4_64'
       fail-fast: false
 
     env:
-      BUILD_NAME: 'smartpi-exporter-${{ matrix.board }}-${{ github.sha }}'
-      CONFIG_NAME: 'smartpi_exporter_${{ matrix.board }}_defconfig'
+      BUILD_NAME: 'smartpi-firmware-${{ matrix.board }}-${{ github.sha }}'
+      CONFIG_NAME: 'smartpi_firmware_${{ matrix.board }}_defconfig'
     steps:
       - name: Free space on runner
         run: |

@@ -5,6 +5,7 @@ Name=eth0
 EmitLLDP=yes
 LinkLocalAddressing=yes
 DHCP=yes
+MulticastDNS=yes
 
 [DHCP]
 ClientIdentifier=mac

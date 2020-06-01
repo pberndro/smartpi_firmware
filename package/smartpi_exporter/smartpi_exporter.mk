@@ -12,14 +12,11 @@ SMARTPI_EXPORTER_LICENSE_FILES = LICENSE
 define SMARTPI_EXPORTER_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 $(SMARTPI_EXPORTER_PKGDIR)/smartpi_exporter.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/smartpi_exporter.service
-	mkdir -p $(TARGET_DIR)/usr/lib/systemd/system/multi-user.target.wants
-	ln -sf ../../../../usr/lib/systemd/system/smartpi_exporter.service \
-		$(TARGET_DIR)/usr/lib/systemd/system/multi-user.target.wants/smartpi_exporter.service
 endef
 
 define SMARTPI_EXPORTER_INSTALL_CONFIG
-	$(INSTALL) -D -m 644 $(SMARTPI_EXPORTER_PKGDIR)/smartpi.ini $(TARGET_DIR)/etc/smartpi_exporter/smartpi.ini
+	$(INSTALL) -D -m 644 $(@D)/smartpi.ini $(TARGET_DIR)/etc/smartpi_exporter/smartpi.ini
 endef
-LIBFOO_POST_INSTALL_TARGET_HOOKS += SMARTPI_EXPORTER_INSTALL_CONFIG
+SMARTPI_EXPORTER_POST_INSTALL_TARGET_HOOKS += SMARTPI_EXPORTER_INSTALL_CONFIG
 
 $(eval $(golang-package))

@@ -6,10 +6,11 @@ Documentation=https://github.com/pberndro/smartpi_exporter
 User=smartpi
 SupplementaryGroups=i2c gpio
 DynamicUser=yes
-Workdir=/etc/smartpi_exporter
+WorkingDirectory=/etc/smartpi_exporter
 ExecStartPre=-!/usr/bin/cp /boot/smartpi.ini /etc/smartpi_exporter/smartpi.ini
 ExecStart=/usr/bin/smartpi_exporter
 Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
